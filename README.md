@@ -4,7 +4,7 @@ A standalone example for [Nextbrowser Mini Apps v1](docs/mini-apps-v1.md). Creat
 
 ## Install
 
-Download [kanban.nbmini.json](https://github.com/0nliner/kanban-mini-app/releases/download/v1.0.0/kanban.nbmini.json). In a Nextbrowser desktop build with Mini Apps, open **Mini Apps → Install from file**, select the downloaded file, and confirm. You can also select **Install** on the Kanban card in the desktop catalog.
+Download [kanban.nbmini.json](https://github.com/0nliner/kanban-mini-app/releases/download/v1.0.0/kanban.nbmini.json). In a Nextbrowser desktop build with Mini Apps, open **Extensions → Mini Apps → Install from file**, select the downloaded file, and confirm. You can also select **Install** on the Kanban card in the desktop catalog.
 
 ## Build your own mini app
 
