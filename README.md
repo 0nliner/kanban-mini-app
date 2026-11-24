@@ -1,10 +1,10 @@
 # Kanban for Nextbrowser
 
-A standalone example for [Nextbrowser Mini Apps v1](docs/mini-apps-v1.md). Create and edit tasks, move them between To do, In progress and Done, and keep the board across desktop restarts. The app requests permission to store its own board on this device.
+A standalone reference for Nextbrowser Mini Apps v2. The UI and the six WebMCP tools work on the same board. Ask the agent to create a task, change its notes, move it into Done or list completed work. Tasks persist across desktop restarts.
 
 ## Install
 
-Download [kanban.nbmini.json](https://github.com/0nliner/kanban-mini-app/releases/download/v1.0.0/kanban.nbmini.json). In a Nextbrowser desktop build with Mini Apps, open **Extensions → Mini Apps → Install from file**, select the downloaded file, and confirm. You can also select **Install** on the Kanban card in the desktop catalog.
+In a Nextbrowser desktop build with Mini Apps v2, open **Extensions → Mini Apps** and select **Install** on the Kanban card. To import a downloaded package, select **Install from file**, review the six agent actions and grant storage access. [Download Kanban 2.0.0](https://github.com/0nliner/kanban-mini-app/releases/download/v2.0.0/kanban.nbmini.json)
 
 ## Build your own mini app
 
@@ -14,6 +14,6 @@ Clone or fork this repository and change the ID and name in `manifest.json` for 
 npm run build
 ```
 
-Import the resulting `<id>.nbmini.json` in Nextbrowser. The [v1 standard](docs/mini-apps-v1.md) describes the manifest, permissions, storage API, quotas and error handling. The [desktop integration](https://github.com/nextbrowser-oss/nextbrowser-app/pull/353) includes the host and a smoke test that installs the package and exercises the board in Electron.
+Import the resulting `<id>.nbmini.json` in Nextbrowser. For each new capability, declare its tool in the manifest and register it on the document. The standard includes an importable counter example, the handler contract, the Kanban coverage table and the v1 upgrade procedure. [Mini Apps v2 standard](docs/mini-apps-v2.md) · [Archived v1 standard](docs/mini-apps-v1.md)
 
 Licensed under [AGPL-3.0-only](LICENSE), as in the upstream Nextbrowser project.

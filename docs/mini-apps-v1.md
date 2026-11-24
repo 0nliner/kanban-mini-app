@@ -1,5 +1,7 @@
 # Nextbrowser Mini Apps v1
 
+Archived package format. New packages use the [Mini Apps v2 standard](mini-apps-v2.md).
+
 Mini apps are single-page web applications that users can install in the desktop client. Open **Extensions → Mini Apps** in the rail, choose **Install** in the catalog, review the permissions, and confirm. Each installed app gets a button beside **Catalog**. Open the app and turn on **Show in rail** to pin its icon for this account on this device. Click the icon to open the app directly. Turn the switch off to remove the shortcut. The host closes the current guest when you switch apps or leave Mini Apps. Save edits before reporting success to the user.
 
 **Download package** saves the catalog entry as a portable file. **Install from file** accepts packages written by other authors. Inspect the name, app ID and permissions before installation. A display name or ID is author-supplied and does not authenticate a publisher. The v1 catalog ships with the desktop release and works offline. Account-specific installs and their data live on this device. Uninstall deletes both after confirmation.
