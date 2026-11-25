@@ -70,7 +70,7 @@ Each app runs at a synthetic HTTPS origin in an isolated Electron guest. The ses
 
 Nextbrowser provides its built-in workspace agent and Codex with an authenticated local MCP endpoint. Package authors only implement WebMCP in the document. The user's browser-tab interaction preference applies to websites; installed v2 apps always expose their tools.
 
-In desktop builds with `get_session_settings`, this tool reports the agent, the Harness² and website WebMCP preferences at launch, and the effective modes for this session. Harness² recovery applies to the built-in agent. Codex exposes these tools under `nextbrowser_desktop`.
+The desktop tool `get_session_settings` reports the agent, its preferences at launch and the effective modes for this session. Builds reporting `effective.harness2Mode` support comparing strategies while planning or acting. In MCP mode Codex and Claude Code can call `harness2_propose`, `harness2_probe` and `harness2_compose` on `nextbrowser_desktop`. The website WebMCP preference is independent of Harness².
 
 1. `list_apps` returns the available v2 apps for the account in `apps`, including widget names and their enabled surfaces. Follow `next_offset` to read the next page.
 2. `list_app_tools({app_id})` opens the app if necessary and returns its registered tools, their schemas and an `instance`. Follow `next_offset` with the same app ID to discover additional tools.
