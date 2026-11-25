@@ -9,7 +9,7 @@ A v2 mini app publishes its full user-facing functionality through native WebMCP
 3. Declare all tool names in the manifest. Register that exact set on the entry document at startup using `document.modelContext.registerTool`. Register independently of the currently selected item, view or open dialog. Report temporarily unavailable actions through a tool error.
 4. Supply a meaningful description, an object JSON Schema for the arguments and an asynchronous or synchronous `execute(input)` handler. Validate arguments in the handler. Resolve with a JSON-serializable `{ok: true, value: ...}` or `{ok: false, error: "actionable message"}`. Only report a successful mutation after it has been saved. Keep output small and page lists.
 
-At installation Nextbrowser loads the package in a disposable guest with empty state, and compares the native tool registry to the manifest. Missing or extra registrations, an empty tool set, or invalid descriptors fail installation. The host repeats discovery in the live app. Authors must also test UI-to-tool parity: matching names alone cannot establish what an app actually does.
+At installation Nextbrowser compares the native tool registry to the manifest in a disposable guest with empty state. It repeats this check for the full app and for the tile and popover on each declared widget surface. Missing or extra registrations, an empty tool set, or invalid descriptors fail installation. The host repeats discovery in the live app. Test that actions produce the same observable result from every surface, including when the player or other controlled service runs in a separate window.
 
 ## First package
 
@@ -40,6 +40,28 @@ The UTF-8 package is limited to 256 KiB. Bundle all HTML, CSS and JavaScript in 
 
 ## Storage and lifecycle
 
+### Panel widgets
+
+A v2 app can supply one or more named interface blocks. Add `widgets` and an agent `skill` to the manifest. The skill is a short, user-readable description of the app, its WebMCP tools, their inputs and a typical workflow. Include setup, confirmation and recovery steps where relevant. The host returns this description in `list_apps`. Applications without widgets can also provide a skill.
+
+```json
+{
+  "skill": "Read list_accounts, select an account by ID, open its player, then check get_playback before using play or pause.",
+  "widgets": [{
+    "id": "now-playing",
+    "name": "Now playing",
+    "surfaces": ["chat.panel", "settings.design"],
+    "grid": { "min": [5, 2], "preferred": [10, 2], "max": [12, 4] }
+  }]
+}
+```
+
+Each pair specifies columns and rows, from 1–12 columns and 1–8 rows. The composer uses 34-pixel rows with 4-pixel gaps. **Extensions → Mini Apps → Widgets** lists downloadable and installable packages. In the chat composer, open the palette and choose **Add** under **Widgets**. The grid button beside the palette enables layout editing. Drag a tile to move it and drag its corner to resize. Arrow keys on either handle also work. The grid adapts when the panel gets narrower and remembers each account’s layout.
+
+Design the most adaptive widget you can. Test every supported width and height, including the smallest pair, enlarged text and both color schemes. Keep compact tiles free of scrollbars. Put controls and account selection in the anchored popover. Use container or viewport queries for the tile. Keep the primary action accessible. The same package entry runs in each placement. Read `GET /context` for `{blockId, surface}`. A widget opened in its popover also receives `view: "popover"`. A popover can fit its controls by posting `{height}` in CSS pixels to `/context` when its content changes. The host clamps the height to the window. Both block and surface are null in the full app. Register the complete WebMCP tool set in every view. Concurrent views share revisioned state, so reload on conflicts and refresh visible data after another view changes it. Use explicit account or document IDs for mutations.
+
+The bundled Music Player uses this contract. **Add account** creates a named local service profile. Choose a listed provider or **Other music service** and confirm its public HTTPS address. **Open service** opens its player for the user to sign in, select music and start playback. Each login has a separate browser session. The widget can show media metadata and pause or resume a track exposed by the service in its main document. Providers control sign-in, subscriptions, embedded-browser access and protected playback. The full player remains available for service-specific controls. Removing an account clears its local sign-in. Only the bundled player can use this media bridge.
+
 With the storage permission, `GET /state` returns `{revision, value}`, initially `{revision:0, value:null}`. To save, send JSON `{revision, value}` with `PUT /state`. The host atomically replaces the previous value, increments the revision and returns the new revision. HTTP 409 means another writer saved first. Reload and reconcile before retrying. Validate state on load and handle failures visibly. The JSON value can occupy up to 128 KiB in UTF-8.
 
 Each app runs at a synthetic HTTPS origin in an isolated Electron guest. The session can reach its entry document and its own state endpoint. Inline scripts, styles and data images are supported. External network access, Node, desktop IPC, nested frames and popups are unavailable. The host selects storage by account and installation on this device. Up to 32 apps can be installed per account. Opening another app closes the current document. The rail shortcut is optional. Uninstalling removes the saved state after confirmation.
@@ -48,7 +70,9 @@ Each app runs at a synthetic HTTPS origin in an isolated Electron guest. The ses
 
 Nextbrowser provides its built-in workspace agent and Codex with an authenticated local MCP endpoint. Package authors only implement WebMCP in the document. The user's browser-tab interaction preference applies to websites; installed v2 apps always expose their tools.
 
-1. `list_apps` returns the available v2 apps for the account in `apps`. Follow `next_offset` to read the next page.
+In desktop builds with `get_session_settings`, this tool reports the agent, the Harness² and website WebMCP preferences at launch, and the effective modes for this session. Harness² recovery applies to the built-in agent. Codex exposes these tools under `nextbrowser_desktop`.
+
+1. `list_apps` returns the available v2 apps for the account in `apps`, including widget names and their enabled surfaces. Follow `next_offset` to read the next page.
 2. `list_app_tools({app_id})` opens the app if necessary and returns its registered tools, their schemas and an `instance`. Follow `next_offset` with the same app ID to discover additional tools.
 3. `call_app_tool({app_id, instance, tool, input_json})` runs the named handler. Encode the argument object as JSON text, up to 24,000 characters. Success returns the app's value, and failure returns an MCP tool error. Read state before retrying a mutation after a timeout or conflict.
 
