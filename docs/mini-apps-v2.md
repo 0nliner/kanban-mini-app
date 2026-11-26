@@ -98,3 +98,9 @@ The reference project includes source and a dependency-free package builder. Run
 ## Updating v1 apps
 
 New installations require v2. The desktop recognizes the bundled Kanban 1.0.0 and upgrades its code while preserving the board and rail preference. Other installed v1 apps remain usable through their UI. To upgrade one, import its author's v2 package with the same ID and select **Upgrade and keep data**. Review the code publisher and requested permission because the replacement will inherit the installation's state. Test schema compatibility against saved v1 data. A v2 package cannot overwrite an existing v2 installation.
+
+## Catalog screenshots and discovery
+
+Submit a companion listing with each catalog package. Use two to eight screenshots of actual overview, task or setup screens, with unique lowercase PNG/WebP filenames and descriptive alt text. Use a clean demo profile. The first image is the cover; 1200 × 675 is the recommended size. Add supported use cases, prerequisites and an example request that the published WebMCP tools can fulfill. Images and editorial content travel separately from the installable .nbmini.json.
+
+See the [complete Kanban listing](../catalog/listing.json) and the [current host specification](https://github.com/nextbrowser-oss/nextbrowser-app/blob/releases/next-0.2.81-dev/docs/mini-apps.md).
